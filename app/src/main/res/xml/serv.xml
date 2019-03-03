@@ -4,4 +4,5 @@
     android:notificationTimeout="1000"
     android:settingsActivity="com.bit.quizbot.MainActivity"
     android:accessibilityFlags="flagReportViewIds"
-    android:canRetrieveWindowContent="true"/>
+    android:canRetrieveWindowContent="true"
+    android:canPerformGestures="true"/>

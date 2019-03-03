@@ -18,6 +18,7 @@ public class socketconn extends AsyncTask<String,Void,Void> {
             PrintWriter pw= new PrintWriter(s.getOutputStream());
             DataInputStream dis=new DataInputStream(s.getInputStream());
             pw.format(string.toString());
+            
             dis.close();
             pw.close();
             s.close();

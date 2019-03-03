@@ -5,6 +5,7 @@
     android:settingsActivity="com.bit.quizbot.MainActivity"
     android:canRetrieveWindowContent="true"
     android:accessibilityFlags="flagReportViewIds"
+    android:canPerformGestures="true"
     />
     <!--android:accessibilityFlags="flagDefault|flagIncludeNotImportantViews|flagRequestTouchExplorationMode">>
 android:canRequestTouchExplorationMode="true"
