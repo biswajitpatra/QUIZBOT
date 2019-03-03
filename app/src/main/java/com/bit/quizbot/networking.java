@@ -13,16 +13,14 @@ import java.net.URL;
 
 public class networking {
     //TODO: finish this class
-    public Void getHTML()
+    public String getHTML()
     {
 
         HttpURLConnection urlConnection = null;
         String result ="";
-        int spaceCount,i;
 
         try {
-            while(true) {
-                URL url = new URL("https://cet-dc.herokuapp.com/client");
+                URL url = new URL("https://quizbotheroku1.com/question");
                 urlConnection = (HttpURLConnection) url.openConnection();
 
                 int code = urlConnection.getResponseCode();
@@ -38,33 +36,7 @@ public class networking {
                     }
                     in.close();
                 }
-
-                String arr="from ";
-                spaceCount = 0;
-                i=0;
-                result=result.trim();
-                while( i < result.length() ){
-                    if( result.charAt(i) == ' ' ) {
-                        arr=arr+"|"+Integer.toString(i);
-                        spaceCount++;
-                    }
-                    i++;
-                }
-
-
-                if(spaceCount==2) {
-                    Log.e("ALERT:::", result+" "+Integer.toString(spaceCount)+"|"+arr);
-                    break;
-                }
-                result="";
-                //Log.e("RESULT::: ",result);
-            }
-
-            Log.e("RESULT::: ",result);
-            String[] words = result.split(" ");
-
-
-
+                Log.e("RESULT::: ",result);
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -75,6 +47,8 @@ public class networking {
         finally {
             urlConnection.disconnect();
         }
-        return null;
+        if(result=="")
+        return "ERROR1";
+        else return result;
     }
 }

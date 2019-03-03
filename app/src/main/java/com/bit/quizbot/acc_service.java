@@ -16,15 +16,17 @@ public class acc_service extends AccessibilityService {
     public acc_service() {
     }
 
-    int mDebugDepth;
+    //int mDebugDepth;
     AccessibilityNodeInfo mNodeInfo;
+    AccessibilityNodeInfo parentInfo;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        mDebugDepth = 0;
+        //mDebugDepth = 0;
         mNodeInfo = event.getSource();
-        Nodeprinter(mNodeInfo, "");
+        parentInfo =gettosource(mNodeInfo);
+        Nodeprinter(parentInfo, "");
         Log.v("FINAL:::", String.format("onAccessibilityEvent: type = [ %s ], class = [ %s ], package = [ %s ], time = [ %s ], text = [ %s ]", event.getEventType(), event.getClassName(), event.getPackageName(), event.getEventTime(), event.getText()));
     }
 
@@ -32,7 +34,14 @@ public class acc_service extends AccessibilityService {
     public void onInterrupt() {
 
     }
-
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
+    private AccessibilityNodeInfo gettosource(AccessibilityNodeInfo node){
+        if(node.getParent()==null)
+            return node;
+        else
+            return gettosource(node.getParent());
+    }
+    /*
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void printAllViews(AccessibilityNodeInfo mNodeInfo) {
         if (mNodeInfo == null) return;
@@ -48,7 +57,7 @@ public class acc_service extends AccessibilityService {
             printAllViews(mNodeInfo.getChild(i));
         }
         mDebugDepth--;
-    }
+    }*/
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void Nodeprinter(AccessibilityNodeInfo mNodeInfo,String logu){
         if(mNodeInfo == null) return ;
@@ -57,13 +66,13 @@ public class acc_service extends AccessibilityService {
        //    log+=".";
         //}
 
-        log= logu+ "("+mNodeInfo.getText()+"=="+((mNodeInfo.getViewIdResourceName() != null)?mNodeInfo.getViewIdResourceName():"NO VIEW ID")+ "<--"+((mNodeInfo.getParent() != null)?mNodeInfo.getParent().getViewIdResourceName():"NO PARENT ID")+")";
+        log= logu+ "("+mNodeInfo.getText()+"=="+((mNodeInfo.getViewIdResourceName() != null)?mNodeInfo.getViewIdResourceName():"NO VIEW ID")+ "<--"+((mNodeInfo.getParent() != null)?mNodeInfo.getParent().getViewIdResourceName():"NO PARENT")+")";
         Log.d("::::", log);
         if(mNodeInfo.getChildCount()<1) return ;
-        mDebugDepth++;
+       // mDebugDepth++;
         for(int i = 0; i < mNodeInfo.getChildCount(); i++){
             Nodeprinter(mNodeInfo.getChild(i),logu+"."+String.valueOf(i));
         }
-        mDebugDepth--;
+       // mDebugDepth--;
     }
 }
