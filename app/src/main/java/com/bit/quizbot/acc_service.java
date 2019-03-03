@@ -36,41 +36,42 @@ public class acc_service extends AccessibilityService {
     }
     @TargetApi(Build.VERSION_CODES.N)
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-    private void actiontaken(AccessibilityNodeInfo node){
-        if(node.getChildCount()>=1)
-        if(node.getChild(0)!=null)
-       if(node.getChild(0).getViewIdResourceName()!=null)
-       {
-           Log.e(":::","done with:"+node.getChild(0).getViewIdResourceName());
-        if(node.getChild(0).getViewIdResourceName().equalsIgnoreCase("com.android.systemui:id/keyguard_indication_text")){
-            Log.e(":::","Finnaly execution");
-            DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-            GestureDescription.Builder gestureBuilder = new GestureDescription.Builder();
-            Path path = new Path();
-            int YValue = displayMetrics.heightPixels / 5;
-            int middle = displayMetrics.widthPixels / 2;
-           // int rightSizeOfScreen = leftSideOfScreen * 3;
+    private void actiontaken(AccessibilityNodeInfo node) {
+        if (node.getChildCount() >= 2) {
+            if (node.getChild(0) != null){
+                if (node.getChild(0).getViewIdResourceName() != null) {
+                    Log.e(":::", "done with:" + node.getChild(0).getViewIdResourceName());
+                    if (node.getChild(0).getViewIdResourceName().equalsIgnoreCase("com.android.systemui:id/keyguard_indication_text")) {
+                        Log.e(":::", "Finnaly execution");
+                        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+                        GestureDescription.Builder gestureBuilder = new GestureDescription.Builder();
+                        Path path = new Path();
+                        int YValue = displayMetrics.heightPixels / 5;
+                        int middle = displayMetrics.widthPixels / 2;
+                        // int rightSizeOfScreen = leftSideOfScreen * 3;
 
-            path.moveTo(middle, YValue*4);
-            path.lineTo(middle, YValue);
+                        path.moveTo(middle, YValue * 4);
+                        path.lineTo(middle, YValue);
 
-            gestureBuilder.addStroke(new GestureDescription.StrokeDescription(path, 0, 1));
-            dispatchGesture(gestureBuilder.build(), new GestureResultCallback() {
-                @Override
-                public void onCompleted(GestureDescription gestureDescription) {
-                    Log.w(":::","Gesture Completed");
-                    super.onCompleted(gestureDescription);
+                        gestureBuilder.addStroke(new GestureDescription.StrokeDescription(path, 0, 1));
+                        dispatchGesture(gestureBuilder.build(), new GestureResultCallback() {
+                            @Override
+                            public void onCompleted(GestureDescription gestureDescription) {
+                                Log.w(":::", "Gesture Completed");
+                                super.onCompleted(gestureDescription);
+                            }
+                        }, null);
+
+
+                    }
+                    else if(node.getChild(0).getViewIdResourceName().equalsIgnoreCase("com.android.systemui:id/keyguard_host_view")){
+                        Log.e(":::", "Finnaly execution password"+node.getChild(4).getViewIdResourceName());
+                        node.getChild(0).getChild(4).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                    }
                 }
-            }, null);
-
-
+            }
 
         }
-        else if(node.getChild(0).getViewIdResourceName().equalsIgnoreCase("com.android.systemui:id/keyguard_host_view")){
-
-        }
-       }
-
     }
     @Override
     public void onInterrupt() {
