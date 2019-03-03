@@ -13,7 +13,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 public class acc_service extends AccessibilityService {
-    public acc_service(){
+    public acc_service() {
     }
 
     int mDebugDepth;
@@ -24,26 +24,45 @@ public class acc_service extends AccessibilityService {
     public void onAccessibilityEvent(AccessibilityEvent event) {
         mDebugDepth = 0;
         mNodeInfo = event.getSource();
-        printAllViews(mNodeInfo);
-        Log.v("FINAL:::", String.format("onAccessibilityEvent: type = [ %s ], class = [ %s ], package = [ %s ], time = [ %s ], text = [ %s ]", event.getEventType(), event.getClassName(), event.getPackageName(),event.getEventTime(), event.getText()));
+        Nodeprinter(mNodeInfo, "");
+        Log.v("FINAL:::", String.format("onAccessibilityEvent: type = [ %s ], class = [ %s ], package = [ %s ], time = [ %s ], text = [ %s ]", event.getEventType(), event.getClassName(), event.getPackageName(), event.getEventTime(), event.getText()));
     }
+
     @Override
-    public void onInterrupt(){
+    public void onInterrupt() {
 
     }
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-    private void printAllViews(AccessibilityNodeInfo mNodeInfo){
+    private void printAllViews(AccessibilityNodeInfo mNodeInfo) {
+        if (mNodeInfo == null) return;
+        String log = "";
+        for (int i = 0; i < mDebugDepth; i++) {
+            log += ".";
+        }
+        log += "(" + mNodeInfo.getText() + "==" + ((mNodeInfo.getViewIdResourceName() != null) ? mNodeInfo.getViewIdResourceName() : "NO VIEW ID") + "<--" + ((mNodeInfo.getParent() != null) ? mNodeInfo.getParent().getViewIdResourceName() : "NO PARENT ID") + ")";
+        Log.d("::::", log);
+        if (mNodeInfo.getChildCount() < 1) return;
+        mDebugDepth++;
+        for (int i = 0; i < mNodeInfo.getChildCount(); i++) {
+            printAllViews(mNodeInfo.getChild(i));
+        }
+        mDebugDepth--;
+    }
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
+    private void Nodeprinter(AccessibilityNodeInfo mNodeInfo,String logu){
         if(mNodeInfo == null) return ;
         String log = "";
-        for(int i = 0; i < mDebugDepth; i++){
-            log+=".";
-        }
-        log+= "("+mNodeInfo.getText()+"=="+((mNodeInfo.getViewIdResourceName() != null)?mNodeInfo.getViewIdResourceName():"NO VIEW ID")+ "<--"+((mNodeInfo.getParent() != null)?mNodeInfo.getParent().getText():"NO PARENT")+")";
+        //for(int i = 0; i < mDebugDepth; i++){
+       //    log+=".";
+        //}
+
+        log= logu+ "("+mNodeInfo.getText()+"=="+((mNodeInfo.getViewIdResourceName() != null)?mNodeInfo.getViewIdResourceName():"NO VIEW ID")+ "<--"+((mNodeInfo.getParent() != null)?mNodeInfo.getParent().getViewIdResourceName():"NO PARENT ID")+")";
         Log.d("::::", log);
         if(mNodeInfo.getChildCount()<1) return ;
         mDebugDepth++;
         for(int i = 0; i < mNodeInfo.getChildCount(); i++){
-            printAllViews(mNodeInfo.getChild(i));
+            Nodeprinter(mNodeInfo.getChild(i),logu+"."+String.valueOf(i));
         }
         mDebugDepth--;
     }
