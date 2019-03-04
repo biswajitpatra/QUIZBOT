@@ -17,6 +17,10 @@ public class MainActivity extends AppCompatActivity {
     public void Start(View v){
         Intent intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
         startActivityForResult(intent, 0);
+    }
+    public void trialchecker(View v){
+        Intent intent = new Intent(MainActivity.this,trial.class);
+        startActivity(intent);
         finish();
     }
 }
